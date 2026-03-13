@@ -1,5 +1,5 @@
-from qiskit.algorithms.minimum_eigensolvers import VQE
-from qiskit.algorithms.optimizers import COBYLA
+from qiskit_algorithms.minimum_eigensolvers import VQE
+from qiskit_algorithms.optimizers import COBYLA
 from qiskit.primitives import Estimator
 
 def run_vqe(qubit_operator, ansatz):
