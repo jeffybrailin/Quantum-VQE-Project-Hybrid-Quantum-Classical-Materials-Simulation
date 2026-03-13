@@ -11,20 +11,23 @@ from vqe.vqe_runner import run_vqe
 
 def main():
     print("Building H2 molecule...")
-    problem = build_h2()
+    problem, qubit_op = build_h2()
 
-    print("Mapping to Qubit Hamiltonian...")
-    qubit_operator = get_qubit_operator(problem)
+    if problem is not None:
+        print("Mapping to Qubit Hamiltonian...")
+        qubit_op = get_qubit_operator(problem)
+    else:
+        print("Using fallback pre-mapped Qubit Hamiltonian.")
     
     # Qiskit Nature operators have num_spin_orbitals, and map to a specific number of qubits
-    num_qubits = qubit_operator.num_qubits
+    num_qubits = qubit_op.num_qubits
     print(f"Number of qubits: {num_qubits}")
 
     print("Creating Ansatz...")
     ansatz = create_ansatz(num_qubits)
 
     print("Running VQE...")
-    result = run_vqe(qubit_operator, ansatz)
+    result = run_vqe(qubit_op, ansatz)
 
     print(f"Ground state energy: {result.eigenvalue}")
 
