@@ -9,8 +9,13 @@ from chemistry.molecule_builder import build_h2
 from chemistry.hamiltonian import get_qubit_operator
 from vqe.ansatz import create_ansatz
 from vqe.vqe_runner import run_vqe
-from surrogate.model import MLSurrogateModel
 import numpy as np
+
+try:
+    from surrogate.model import MLSurrogateModel
+    ML_AVAILABLE = True
+except ImportError:
+    ML_AVAILABLE = False
 
 st.set_page_config(page_title="Quantum VQE Platform", page_icon="⚛️", layout="wide")
 
@@ -57,14 +62,17 @@ with tab2:
     st.header("Surrogate ML Screening")
     st.write("Train a fast ML model to predict properties without quantum overhead.")
     
-    if st.button("Train Surrogate (Dummy Data)"):
-        with st.spinner("Training RandomForest model..."):
-            ml = MLSurrogateModel("rf")
-            X_dummy = np.random.rand(100, 4) # dummy features
-            y_dummy = np.random.rand(100) # dummy energies
-            ml.train(X_dummy, y_dummy)
-            st.success("Model trained successfully!")
-            st.write("Ready to screen new candidates 100x faster than VQE.")
+    if not ML_AVAILABLE:
+        st.warning("Scikit-Learn (Machine Learning backend) could not be loaded on this system environment. The Surrogate ML feature is disabled.")
+    else:
+        if st.button("Train Surrogate (Dummy Data)"):
+            with st.spinner("Training RandomForest model..."):
+                ml = MLSurrogateModel("rf")
+                X_dummy = np.random.rand(100, 4) # dummy features
+                y_dummy = np.random.rand(100) # dummy energies
+                ml.train(X_dummy, y_dummy)
+                st.success("Model trained successfully!")
+                st.write("Ready to screen new candidates 100x faster than VQE.")
 
 st.sidebar.markdown("### Resources")
 st.sidebar.markdown("[GitHub Repository](https://github.com/jeffybrailin/Quantum-VQE-Project-Hybrid-Quantum-Classical-Materials-Simulation)")
