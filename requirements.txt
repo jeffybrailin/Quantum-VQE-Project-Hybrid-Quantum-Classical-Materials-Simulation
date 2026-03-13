@@ -1,0 +1,8 @@
+qiskit
+qiskit-nature
+numpy
+scipy
+pandas
+matplotlib
+scikit-learn
+pyscf
